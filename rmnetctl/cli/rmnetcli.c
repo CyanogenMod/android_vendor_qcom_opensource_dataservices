@@ -166,12 +166,21 @@ static void rmnet_api_usage(void)
 	printf(_5TABS" larger than 15 ");
 	printf(_5TABS" characters. Returns the");
 	printf(_5TABS" status code\n\n");
-	printf("rmnetcli newvnd <dev_name>               Creates a new");
+	printf("rmnetcli newvnd <dev_id>                 Creates a new");
 	printf(_5TABS" virtual network device node.");
-	printf(_5TABS" dev_name cannot be");
-	printf(_5TABS" larger than 15. Returns");
+	printf(_5TABS" dev_id is an int");
+	printf(_5TABS" less than 32. Returns");
 	printf(_5TABS" the status code\n\n");
-	printf("rmnetcli freevnd <dev_name>              Removes virtual");
+	printf("rmnetcli newvndprefix <dev_id> <name_prefix>   Creates");
+	printf(_5TABS" virtual network device node.");
+	printf(_5TABS" dev_id is an int");
+	printf(_5TABS" less than 32. Prefix");
+	printf(_5TABS" must be less than");
+	printf(_5TABS" 15 chars. Returns");
+	printf(_5TABS" the status code\n\n");
+	printf("rmnetcli getvndname <dev_id>              Get name of");
+	printf(_5TABS" network device node from id");
+	printf("rmnetcli freevnd <dev_id>              Removes virtual");
 	printf(_5TABS" network device node. dev_name");
 	printf(_5TABS" cannot be larger than 15.");
 	printf(_5TABS" Returns the status code\n\n");
@@ -280,10 +289,24 @@ static int rmnet_api_call(int argc, char *argv[])
 		if (return_code == RMNETCTL_SUCCESS) {
 			printf("ingress_flags is %u\n", ingress_flags);
 		}
+	} else if (!strcmp(*argv, "newvndprefix")) {
+		_RMNETCLI_CHECKNULL(argv[1]);
+		_RMNETCLI_CHECKNULL(argv[2]);
+		return_code = rmnet_new_vnd_prefix(handle,
+		_STRTOUI32(argv[1]), &error_number, RMNETCTL_NEW_VND, argv[2]);
 	} else if (!strcmp(*argv, "newvnd")) {
 		_RMNETCLI_CHECKNULL(argv[1]);
 		return_code = rmnet_new_vnd(handle,
 		_STRTOUI32(argv[1]), &error_number, RMNETCTL_NEW_VND);
+	} else if (!strcmp(*argv, "getvndname")) {
+		char buffer[32];
+		memset(buffer, 0, 32);
+		_RMNETCLI_CHECKNULL(argv[1]);
+		return_code = rmnet_get_vnd_name(handle, _STRTOUI32(argv[1]),
+			           &error_number, buffer, 32);
+		if (return_code == RMNETCTL_SUCCESS) {
+			printf("VND name: %s\n", buffer);
+		}
 	} else if (!strcmp(*argv, "freevnd")) {
 		_RMNETCLI_CHECKNULL(argv[1]);
 		return_code = rmnet_new_vnd(handle,
