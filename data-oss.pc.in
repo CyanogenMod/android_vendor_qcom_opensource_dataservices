@@ -3,8 +3,8 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-Name: data-opensource
+Name: data-oss
 Description: Data Opensource Components
 Version: @VERSION@
 Libs: -L${libdir} -lrmnetctl
-Cflags: -I${includedir}/data-opensource
+Cflags: -I${includedir}/data-oss
