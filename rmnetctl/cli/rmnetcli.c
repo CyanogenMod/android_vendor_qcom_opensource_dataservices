@@ -87,7 +87,7 @@ char rmnetcfg_error_code_text
 * @param void
 * @return void
 */
-static void rmnet_api_usage()
+static void rmnet_api_usage(void)
 {
 	printf("RmNet API Usage:\n\n");
 	printf("rmnetcli help                            Displays this help\n");

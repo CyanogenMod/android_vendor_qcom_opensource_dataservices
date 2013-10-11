@@ -51,6 +51,11 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "librmnetctl_hndl.h"
 #include "librmnetctl.h"
 
+#ifdef USE_GLIB
+#include <glib.h>
+#define strlcpy g_strlcpy
+#endif
+
 #define RMNETCTL_SOCK_FLAG 0
 #define ROOT_USER_ID 0
 #define MIN_VALID_PROCESS_ID 0
