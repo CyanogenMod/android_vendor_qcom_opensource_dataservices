@@ -1,9 +1,9 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 AC_PREREQ([2.65])
-AC_INIT(data-opensource, 1.0.0)
-AM_INIT_AUTOMAKE(data-opensource, 1.0.0)
-AC_OUTPUT(Makefile rmnetctl/src/Makefile rmnetctl/cli/Makefile data-opensource.pc)
+AC_INIT(data-oss, 1.0.0)
+AM_INIT_AUTOMAKE(data-oss, 1.0.0)
+AC_OUTPUT(Makefile rmnetctl/src/Makefile rmnetctl/cli/Makefile data-oss.pc)
 AC_CONFIG_SRCDIR([rmnetctl/src/librmnetctl.c])
 #AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
