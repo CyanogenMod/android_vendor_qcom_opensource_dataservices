@@ -660,22 +660,37 @@ int rmnet_get_logical_ep_config(rmnetctl_hndl_t *hndl,
 	return return_code;
 }
 
-int rmnet_new_vnd(rmnetctl_hndl_t *hndl,
-		  uint32_t id,
-		  uint16_t *error_code,
-		  uint8_t new_vnd) {
+int rmnet_new_vnd_prefix(rmnetctl_hndl_t *hndl,
+			 uint32_t id,
+			 uint16_t *error_code,
+			 uint8_t new_vnd,
+			 const char *prefix)
+{
 	struct rmnet_nl_msg_s request, response;
 	int return_code = RMNETCTL_LIB_ERR;
+	int str_len = -1;
 	do {
 	if ((!hndl) || (!error_code) ||
 	((new_vnd != RMNETCTL_NEW_VND) && (new_vnd != RMNETCTL_FREE_VND))) {
 		return_code = RMNETCTL_INVALID_ARG;
 		break;
 	}
-	if (new_vnd ==  RMNETCTL_NEW_VND)
-		request.message_type = RMNET_NETLINK_NEW_VND;
-	else
+
+	memset(request.vnd.vnd_name, 0, RMNET_MAX_STR_LEN);
+	if (new_vnd ==  RMNETCTL_NEW_VND) {
+		if (prefix) {
+			request.message_type =RMNET_NETLINK_NEW_VND_WITH_PREFIX;
+			str_len = strlcpy((char *)request.vnd.vnd_name,
+					  prefix, RMNET_MAX_STR_LEN);
+			if (_rmnetctl_check_len(str_len, error_code)
+						!= RMNETCTL_SUCCESS)
+				break;
+		} else {
+			request.message_type = RMNET_NETLINK_NEW_VND;
+		}
+	} else {
 		request.message_type = RMNET_NETLINK_FREE_VND;
+	}
 
 	request.arg_length = sizeof(uint32_t);
 	request.vnd.id = id;
@@ -690,3 +705,51 @@ int rmnet_new_vnd(rmnetctl_hndl_t *hndl,
 	} while(0);
 	return return_code;
 }
+
+int rmnet_new_vnd(rmnetctl_hndl_t *hndl,
+		  uint32_t id,
+		  uint16_t *error_code,
+		  uint8_t new_vnd)
+{
+	return rmnet_new_vnd_prefix(hndl, id, error_code, new_vnd, 0);
+}
+
+int rmnet_get_vnd_name(rmnetctl_hndl_t *hndl,
+		       uint32_t id,
+		       uint16_t *error_code,
+		       char *buf,
+		       uint32_t buflen)
+{
+	struct rmnet_nl_msg_s request, response;
+	uint32_t str_len;
+	int return_code = RMNETCTL_LIB_ERR;
+	do {
+	if ((!hndl) || (!error_code)) {
+		return_code = RMNETCTL_INVALID_ARG;
+		break;
+	}
+
+	request.message_type = RMNET_NETLINK_GET_VND_NAME;
+	request.arg_length = sizeof(uint32_t);
+	request.vnd.id = id;
+
+
+	if ((*error_code = rmnetctl_transact(hndl, &request, &response))
+		!= RMNETCTL_SUCCESS)
+		break;
+	if (_rmnetctl_check_data(response.crd, error_code) != RMNETCTL_SUCCESS)
+		break;
+
+	str_len = strlcpy(buf,
+			  (char *)(response.vnd.vnd_name),
+			  buflen);
+	if (str_len >= buflen) {
+		*error_code = RMNETCTL_API_ERR_STRING_TRUNCATION;
+		break;
+	}
+
+	return_code = RMNETCTL_SUCCESS;
+	} while (0);
+	return return_code;
+}
+

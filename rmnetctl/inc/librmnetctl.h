@@ -316,8 +316,8 @@ int rmnet_get_logical_ep_config(rmnetctl_hndl_t *hndl,
 * @brief Public API to create a new virtual device node
 * @details Message type is RMNET_NETLINK_NEW_VND or
 * RMNETCTL_FREE_VND based on the flag for new_vnd
-* @param *rmnetctl_hndl_t_val RmNet handle for the Netlink message
-* @param node_number Node number to create the virtual network device node
+* @param hndl RmNet handle for the Netlink message
+* @param id Node number to create the virtual network device node
 * @param error_code Status code of this operation returned from the kernel
 * @param new_vnd creates a new virtual network device if  RMNETCTL_NEW_VND or
 * frees the device if RMNETCTL_FREE_VND
@@ -331,6 +331,48 @@ int rmnet_new_vnd(rmnetctl_hndl_t *hndl,
 		  uint32_t id,
 		  uint16_t *error_code,
 		  uint8_t new_vnd);
+
+/*!
+ * @brief Public API to create a new virtual device node with a custom prefix
+ * @details Message type is RMNET_NETLINK_NEW_VND or
+ * RMNETCTL_FREE_VND based on the flag for new_vnd
+ * @param hndl RmNet handle for the Netlink message
+ * @param id Node number to create the virtual network device node
+ * @param error_code Status code of this operation returned from the kernel
+ * @param new_vnd creates a new virtual network device if  RMNETCTL_NEW_VND or
+ * frees the device if RMNETCTL_FREE_VND
+ * @param prefix Prefix to be used when naming the network interface
+ * @return RMNETCTL_SUCCESS if successful
+ * @return RMNETCTL_LIB_ERR if there was a library error. Check error_code
+ * @return RMNETCTL_KERNEL_ERR if there was an error in the kernel.
+ * Check error_code
+ * @return RMNETCTL_INVALID_ARG if invalid arguments were passed to the API
+ */
+int rmnet_new_vnd_prefix(rmnetctl_hndl_t *hndl,
+			 uint32_t id,
+			 uint16_t *error_code,
+			 uint8_t new_vnd,
+			 const char *prefix);
+/*!
+ * @brief API to get the ASCII name of a virtual network device from its ID
+ * @param hndl RmNet handle for the Netlink message
+ * @param id Node number to create the virtual network device node
+ * @param error_code Status code of this operation returned from the kernel
+ * @param buf Buffer to store ASCII representation of device name
+ * @param buflen Length of the buffer
+ * @param prefix Prefix to be used when naming the network interface
+ * @return RMNETCTL_SUCCESS if successful
+ * @return RMNETCTL_LIB_ERR if there was a library error. Check error_code
+ * @return RMNETCTL_KERNEL_ERR if there was an error in the kernel.
+ * Check error_code
+ * @return RMNETCTL_INVALID_ARG if invalid arguments were passed to the API
+ */
+
+int rmnet_get_vnd_name(rmnetctl_hndl_t *hndl,
+                      uint32_t id,
+                      uint16_t *error_code,
+                      char *buf,
+                      uint32_t buflen);
 
 #endif /* not defined LIBRMNETCTL_H */
 
