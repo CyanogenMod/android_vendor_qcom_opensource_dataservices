@@ -184,6 +184,14 @@ static void rmnet_api_usage(void)
 	printf(_5TABS" network device node. dev_name");
 	printf(_5TABS" cannot be larger than 15.");
 	printf(_5TABS" Returns the status code\n\n");
+	printf("rmnetcli addvnctcflow <dev_id>            Add a modem flow");
+	printf(_2TABS" <mdm_flow_hndl>         handle - tc flow handle");
+	printf(_2TABS" <tc_flow_hndl>          mapping for a virtual network");
+	printf(_2TABS" device node\n\n");
+	printf("rmnetcli delvnctcflow <dev_id>            Delete a modem flow");
+	printf(_2TABS" <mdm_flow_hndl>         handle - tc flow handle");
+	printf(_2TABS" <tc_flow_hndl>          mapping for a virtual network");
+	printf(_2TABS" device node\n\n");
 }
 
 static void print_rmnetctl_lib_errors(uint16_t error_number)  {
@@ -315,6 +323,13 @@ static int rmnet_api_call(int argc, char *argv[])
 		_RMNETCLI_CHECKNULL(argv[1]);
 		return_code = rmnet_set_link_ingress_data_format(handle,
 		_STRTOUI32(argv[1]), argv[2], &error_number);
+	} else if (!strcmp(*argv, "delvnctcflow")) {
+		_RMNETCLI_CHECKNULL(argv[1]);
+		_RMNETCLI_CHECKNULL(argv[2]);
+		_RMNETCLI_CHECKNULL(argv[3]);
+		return_code = rmnet_add_del_vnd_tc_flow(handle,
+		_STRTOUI32(argv[1]), _STRTOUI32(argv[2]), _STRTOUI32(argv[3]),
+		RMNETCTL_DEL_FLOW, &error_number);
 	} else if (!strcmp(*argv, "getlepc")) {
 		_RMNETCLI_CHECKNULL(argv[1]);
 		uint8_t rmnet_mode;
@@ -334,6 +349,13 @@ static int rmnet_api_call(int argc, char *argv[])
 			printf("rmnet_mode is %u\n", rmnet_mode);
 			printf("egress_dev_name is %s\n", egress_dev_name);
 		}
+	} else if (!strcmp(*argv, "addvnctcflow")) {
+		_RMNETCLI_CHECKNULL(argv[1]);
+		_RMNETCLI_CHECKNULL(argv[2]);
+		_RMNETCLI_CHECKNULL(argv[3]);
+		return_code = rmnet_add_del_vnd_tc_flow(handle,
+		_STRTOUI32(argv[1]), _STRTOUI32(argv[2]), _STRTOUI32(argv[3]),
+		RMNETCTL_ADD_FLOW, &error_number);
 	} else if (!strcmp(*argv, "setledf")) {
 		_RMNETCLI_CHECKNULL(argv[1]);
 		_RMNETCLI_CHECKNULL(argv[2]);

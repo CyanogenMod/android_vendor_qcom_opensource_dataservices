@@ -753,3 +753,37 @@ int rmnet_get_vnd_name(rmnetctl_hndl_t *hndl,
 	return return_code;
 }
 
+int rmnet_add_del_vnd_tc_flow(rmnetctl_hndl_t *hndl,
+			      uint32_t id,
+			      uint32_t map_flow_id,
+			      uint32_t tc_flow_id,
+			      uint8_t set_flow,
+			      uint16_t *error_code) {
+	struct rmnet_nl_msg_s request, response;
+	int return_code = RMNETCTL_LIB_ERR;
+	do {
+	if ((!hndl) || ((set_flow != RMNETCTL_ADD_FLOW) &&
+	(set_flow != RMNETCTL_DEL_FLOW))) {
+		return_code = RMNETCTL_INVALID_ARG;
+		break;
+	}
+	if (set_flow ==  RMNETCTL_ADD_FLOW)
+		request.message_type = RMNET_NETLINK_ADD_VND_TC_FLOW;
+	else
+		request.message_type = RMNET_NETLINK_DEL_VND_TC_FLOW;
+
+	request.arg_length = (sizeof(uint32_t))*3;
+	request.flow_control.id = id;
+	request.flow_control.map_flow_id = map_flow_id;
+	request.flow_control.tc_flow_id = tc_flow_id;
+
+	if ((*error_code = rmnetctl_transact(hndl, &request, &response))
+	!= RMNETCTL_SUCCESS)
+		break;
+	if (_rmnetctl_check_code(response.crd, error_code) != RMNETCTL_SUCCESS)
+		break;
+	return_code = _rmnetctl_set_codes(response.return_code, error_code);
+	} while(0);
+	return return_code;
+}
+

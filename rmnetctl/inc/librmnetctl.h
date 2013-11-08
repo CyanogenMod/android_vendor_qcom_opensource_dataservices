@@ -58,6 +58,10 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define RMNETCTL_NEW_VND 1
 /* Flag to free a new virtual network device*/
 #define RMNETCTL_FREE_VND 0
+/* Flag to add a new flow*/
+#define RMNETCTL_ADD_FLOW 1
+/* Flag to delete an existing flow*/
+#define RMNETCTL_DEL_FLOW 0
 
 enum rmnetctl_error_codes_e {
 	/* API succeeded. This should always be the first element. */
@@ -373,6 +377,30 @@ int rmnet_get_vnd_name(rmnetctl_hndl_t *hndl,
                       uint16_t *error_code,
                       char *buf,
                       uint32_t buflen);
+
+/*!
+* @brief Public API to set or clear a flow
+* @details Message type is RMNET_NETLINK_ADD_VND_TC_FLOW or
+* RMNET_NETLINK_DEL_VND_TC_FLOW based on the flag for set_flow
+* @param *rmnetctl_hndl_t_val RmNet handle for the Netlink message
+* @param id Node number to set or clear the flow on the virtual network
+* device node
+* @param map_flow_id Flow handle of the modem
+* @param tc_flow_id Software flow handle
+* @param set_flow sets the flow if  RMNET_NETLINK_SET_FLOW or
+* clears the flow if RMNET_NETLINK_CLEAR_FLOW
+* @return RMNETCTL_SUCCESS if successful
+* @return RMNETCTL_LIB_ERR if there was a library error. Check error_code
+* @return RMNETCTL_KERNEL_ERR if there was an error in the kernel.
+* Check error_code
+* @return RMNETCTL_INVALID_ARG if invalid arguments were passed to the API
+*/
+int rmnet_add_del_vnd_tc_flow(rmnetctl_hndl_t *hndl,
+			      uint32_t id,
+			      uint32_t map_flow_id,
+			      uint32_t tc_flow_id,
+			      uint8_t set_flow,
+			      uint16_t *error_code);
 
 #endif /* not defined LIBRMNETCTL_H */
 
