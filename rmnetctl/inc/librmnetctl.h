@@ -2,7 +2,7 @@
 
 			  L I B R M N E T C T L . H
 
-Copyright (c) 2013, The Linux Foundation. All rights reserved.
+Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -293,6 +293,25 @@ int rmnet_set_logical_ep_config(rmnetctl_hndl_t *hndl,
 				const char *next_dev,
 				uint16_t *error_code);
 
+/*!
+* @brief Public API to un-set the logical endpoint configuration for a
+* particular link.
+* @details Message type is RMNET_NETLINK_UNSET_LOGICAL_EP_CONFIG.
+* @param *rmnetctl_hndl_t_val RmNet handle for the Netlink message
+* @param logical_ep_id Logical end point id on which the configuration is to be
+* un-set
+* @param dev_name Device on which to un-set the logical end point configuration
+* @param error_code Status code of this operation returned from the kernel
+* @return RMNETCTL_SUCCESS if successful
+* @return RMNETCTL_LIB_ERR if there was a library error. Check error_code
+* @return RMNETCTL_KERNEL_ERR if there was an error in the kernel.
+* Check error_code
+* @return RMNETCTL_INVALID_ARG if invalid arguments were passed to the API
+*/
+int rmnet_unset_logical_ep_config(rmnetctl_hndl_t *hndl,
+				  int32_t ep_id,
+				  const char *dev_name,
+				  uint16_t *error_code);
 /*!
 * @brief Public API to get the logical endpoint configuration for a
 * particular link.

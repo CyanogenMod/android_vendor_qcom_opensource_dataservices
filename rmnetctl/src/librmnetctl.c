@@ -2,7 +2,7 @@
 
 			L I B R M N E T C T L . C
 
-Copyright (c) 2013, The Linux Foundation. All rights reserved.
+Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -613,6 +613,44 @@ int rmnet_set_logical_ep_config(rmnetctl_hndl_t *hndl,
 
 	return_code = _rmnetctl_set_codes(response.return_code, error_code);
 	} while(0);
+	return return_code;
+}
+
+int rmnet_unset_logical_ep_config(rmnetctl_hndl_t *hndl,
+				  int32_t ep_id,
+				  const char *dev_name,
+				  uint16_t *error_code) {
+	struct rmnet_nl_msg_s request, response;
+	int str_len = -1, return_code = RMNETCTL_LIB_ERR;
+	do {
+
+	if ((!hndl) || ((ep_id < -1) || (ep_id > 31)) || (!error_code) ||
+		_rmnetctl_check_dev_name(dev_name)) {
+		return_code = RMNETCTL_INVALID_ARG;
+		break;
+	}
+
+	request.message_type = RMNET_NETLINK_UNSET_LOGICAL_EP_CONFIG;
+
+	request.arg_length = RMNET_MAX_STR_LEN + sizeof(int32_t);
+	str_len = strlcpy((char *)(request.local_ep_config.dev),
+			  dev_name,
+			  RMNET_MAX_STR_LEN);
+
+	if (_rmnetctl_check_len(str_len, error_code) != RMNETCTL_SUCCESS)
+		break;
+
+	request.local_ep_config.ep_id = ep_id;
+
+	if ((*error_code = rmnetctl_transact(hndl, &request, &response))
+		!= RMNETCTL_SUCCESS)
+		break;
+	if (_rmnetctl_check_code(response.crd, error_code) != RMNETCTL_SUCCESS)
+		break;
+
+	return_code = _rmnetctl_set_codes(response.return_code, error_code);
+	} while(0);
+
 	return return_code;
 }
 

@@ -2,7 +2,7 @@
 
 			R M N E T C L I . C
 
-Copyright (c) 2013, The Linux Foundation. All rights reserved.
+Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -151,6 +151,13 @@ static void rmnet_api_usage(void)
 	printf(_5TABS" cannot be larger");
 	printf(_5TABS" than 15 tcharacters");
 	printf(_5TABS" Returns the status code\n\n");
+	printf("rmnetcli unsetlepc <logical_ep_id>       Un-sets the logical");
+	printf(_2TABS"  <dev_name>              endpoint configuration for");
+	printf(_5TABS" a particular link.");
+	printf(_5TABS" integers from -1 to 31.");
+	printf(_5TABS" dev_name cannot be larger");
+	printf(_5TABS" than 15 tcharacters");
+	printf(_5TABS" Returns the status code\n\n");
 	printf("rmnetcli getlepc <logical_ep_id>         Sets the logical");
 	printf(_2TABS" <dev_name>              enpoint configuration for a");
 	printf(_5TABS" particular link.");
@@ -179,7 +186,7 @@ static void rmnet_api_usage(void)
 	printf(_5TABS" 15 chars. Returns");
 	printf(_5TABS" the status code\n\n");
 	printf("rmnetcli getvndname <dev_id>              Get name of");
-	printf(_5TABS" network device node from id");
+	printf(_5TABS" network device node from id\n\n");
 	printf("rmnetcli freevnd <dev_id>              Removes virtual");
 	printf(_5TABS" network device node. dev_name");
 	printf(_5TABS" cannot be larger than 15.");
@@ -369,6 +376,10 @@ static int rmnet_api_call(int argc, char *argv[])
 		return_code = rmnet_set_logical_ep_config(handle,
 		_STRTOI32(argv[1]), _STRTOUI8(argv[2]), argv[3], argv[4],
 		&error_number);
+	} else if (!strcmp(*argv, "unsetlepc")) {
+		_RMNETCLI_CHECKNULL(argv[1]);
+		return_code = rmnet_unset_logical_ep_config(handle,
+		_STRTOI32(argv[1]), argv[2], &error_number);
 	}
 	print_rmnet_api_status(return_code, error_number);
 	rmnetctl_cleanup(handle);
