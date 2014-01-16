@@ -125,8 +125,10 @@ static void rmnet_api_usage(void)
 	printf(_5TABS" byte unsigned integer");
 	printf(_5TABS" egress_flags\n\n");
 	printf("rmnetcli setlidf <ingress_flags>         Sets the ingress");
-	printf(_2TABS" <dev_name>              data format for a particular");
-	printf(_5TABS" link. egress_flags is 4");
+	printf(_2TABS" <tail_spacing>          data format for a particular");
+	printf(_2TABS" <dev_name>              link. ingress_flags is 4");
+	printf(_5TABS" byte unsigned integer.");
+	printf(_5TABS" tail_spacing is a one.");
 	printf(_5TABS" byte unsigned integer.");
 	printf(_5TABS" dev_name cannot be");
 	printf(_5TABS" larger than 15.");
@@ -299,10 +301,12 @@ static int rmnet_api_call(int argc, char *argv[])
 		}
 	} else if (!strcmp(*argv, "getlidf")) {
 		uint32_t ingress_flags;
-		return_code = rmnet_get_link_ingress_data_format(handle,
-		argv[1], &ingress_flags, &error_number);
+		uint8_t  tail_spacing;
+		return_code = rmnet_get_link_ingress_data_format_tailspace(
+		handle, argv[1], &ingress_flags, &tail_spacing, &error_number);
 		if (return_code == RMNETCTL_SUCCESS) {
 			printf("ingress_flags is %u\n", ingress_flags);
+			printf("tail_spacing is %u\n", tail_spacing);
 		}
 	} else if (!strcmp(*argv, "newvndprefix")) {
 		_RMNETCLI_CHECKNULL(argv[1]);
@@ -328,8 +332,11 @@ static int rmnet_api_call(int argc, char *argv[])
 		_STRTOUI32(argv[1]), &error_number, RMNETCTL_FREE_VND);
 	} else if (!strcmp(*argv, "setlidf")) {
 		_RMNETCLI_CHECKNULL(argv[1]);
-		return_code = rmnet_set_link_ingress_data_format(handle,
-		_STRTOUI32(argv[1]), argv[2], &error_number);
+		_RMNETCLI_CHECKNULL(argv[2]);
+		_RMNETCLI_CHECKNULL(argv[3]);
+		return_code = rmnet_set_link_ingress_data_format_tailspace(
+		handle, _STRTOUI32(argv[1]), _STRTOUI8(argv[2]), argv[3],
+		&error_number);
 	} else if (!strcmp(*argv, "delvnctcflow")) {
 		_RMNETCLI_CHECKNULL(argv[1]);
 		_RMNETCLI_CHECKNULL(argv[2]);
