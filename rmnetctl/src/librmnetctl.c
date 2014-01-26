@@ -501,10 +501,11 @@ int rmnet_get_link_egress_data_format(rmnetctl_hndl_t *hndl,
 	return return_code;
 }
 
-int rmnet_set_link_ingress_data_format(rmnetctl_hndl_t *hndl,
-				       uint32_t ingress_flags,
-				       const char *dev_name,
-				       uint16_t *error_code) {
+int rmnet_set_link_ingress_data_format_tailspace(rmnetctl_hndl_t *hndl,
+						 uint32_t ingress_flags,
+						 uint8_t  tail_spacing,
+						 const char *dev_name,
+						 uint16_t *error_code) {
 	struct rmnet_nl_msg_s request, response;
 	int str_len = -1, return_code = RMNETCTL_LIB_ERR;
 	do {
@@ -523,6 +524,7 @@ int rmnet_set_link_ingress_data_format(rmnetctl_hndl_t *hndl,
 	if (_rmnetctl_check_len(str_len, error_code) != RMNETCTL_SUCCESS)
 		break;
 	request.data_format.flags = ingress_flags;
+	request.data_format.tail_spacing = tail_spacing;
 
 	if ((*error_code = rmnetctl_transact(hndl, &request, &response))
 		!= RMNETCTL_SUCCESS)
@@ -536,14 +538,15 @@ int rmnet_set_link_ingress_data_format(rmnetctl_hndl_t *hndl,
 	return return_code;
 }
 
-int rmnet_get_link_ingress_data_format(rmnetctl_hndl_t *hndl,
-				       const char *dev_name,
-				       uint32_t *ingress_flags,
-				       uint16_t *error_code) {
+int rmnet_get_link_ingress_data_format_tailspace(rmnetctl_hndl_t *hndl,
+						 const char *dev_name,
+						 uint32_t *ingress_flags,
+						 uint8_t  *tail_spacing,
+						 uint16_t *error_code) {
 	struct rmnet_nl_msg_s request, response;
 	int str_len = -1, return_code = RMNETCTL_LIB_ERR;
 	do {
-	if ((!hndl) || (!ingress_flags) || (!error_code) ||
+	if ((!hndl) || (!error_code) ||
 		_rmnetctl_check_dev_name(dev_name)) {
 		return_code = RMNETCTL_INVALID_ARG;
 		break;
@@ -565,7 +568,12 @@ int rmnet_get_link_ingress_data_format(rmnetctl_hndl_t *hndl,
 	if (_rmnetctl_check_data(response.crd, error_code) != RMNETCTL_SUCCESS)
 		break;
 
-	*ingress_flags = response.data_format.flags;
+	if (ingress_flags)
+		*ingress_flags = response.data_format.flags;
+
+	if (tail_spacing)
+		*tail_spacing = response.data_format.tail_spacing;
+
 	return_code = RMNETCTL_SUCCESS;
 	} while(0);
 	return return_code;

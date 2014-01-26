@@ -238,6 +238,7 @@ int rmnet_get_link_egress_data_format(rmnetctl_hndl_t *hndl,
 * @details Message type is RMNET_NETLINK_SET_LINK_INGRESS_DATA_FORMAT.
 * @param *rmnetctl_hndl_t_val RmNet handle for the Netlink message
 * @param ingress_flags Ingress flags from the device
+* @param tail_spacing Tail spacing needed for the packet
 * @param dev_name Device on which to set the ingress data format
 * @param error_code Status code of this operation returned from the kernel
 * @return RMNETCTL_SUCCESS if successful
@@ -246,10 +247,11 @@ int rmnet_get_link_egress_data_format(rmnetctl_hndl_t *hndl,
 * Check error_code
 * @return RMNETCTL_INVALID_ARG if invalid arguments were passed to the API
 */
-int rmnet_set_link_ingress_data_format(rmnetctl_hndl_t *hndl,
-				       uint32_t ingress_flags,
-				       const char *dev_name,
-				       uint16_t *error_code);
+int rmnet_set_link_ingress_data_format_tailspace(rmnetctl_hndl_t *hndl,
+						 uint32_t ingress_flags,
+						 uint8_t  tail_spacing,
+						 const char *dev_name,
+						 uint16_t *error_code);
 
 /*!
 * @brief Public API to get the ingress data format for a particular link.
@@ -257,6 +259,7 @@ int rmnet_set_link_ingress_data_format(rmnetctl_hndl_t *hndl,
 * @param *rmnetctl_hndl_t_val RmNet handle for the Netlink message
 * @param dev_name Device on which to get the ingress data format
 * @param ingress_flags Ingress flags from the device
+* @param tail_spacing Tail spacing needed for the packet
 * @param error_code Status code of this operation returned from the kernel
 * @return RMNETCTL_SUCCESS if successful
 * @return RMNETCTL_LIB_ERR if there was a library error. Check error_code
@@ -264,10 +267,35 @@ int rmnet_set_link_ingress_data_format(rmnetctl_hndl_t *hndl,
 * Check error_code
 * @return RMNETCTL_INVALID_ARG if invalid arguments were passed to the API
 */
-int rmnet_get_link_ingress_data_format(rmnetctl_hndl_t *hndl,
-				       const char *dev_name,
-				       uint32_t *ingress_flags,
-				       uint16_t *error_code);
+int rmnet_get_link_ingress_data_format_tailspace(rmnetctl_hndl_t *hndl,
+						const char *dev_name,
+						uint32_t *ingress_flags,
+						uint8_t  *tail_spacing,
+						uint16_t *error_code);
+
+inline int rmnet_set_link_ingress_data_format(rmnetctl_hndl_t *hndl,
+					      uint32_t ingress_flags,
+					      const char *dev_name,
+					      uint16_t *error_code)
+{
+	return rmnet_set_link_ingress_data_format_tailspace(hndl,
+							    ingress_flags,
+							    0,
+							    dev_name,
+							    error_code);
+}
+
+inline int rmnet_get_link_ingress_data_format(rmnetctl_hndl_t *hndl,
+					      const char *dev_name,
+					      uint32_t *ingress_flags,
+					      uint16_t *error_code)
+{
+	return rmnet_get_link_ingress_data_format_tailspace(hndl,
+							    dev_name,
+							    ingress_flags,
+							    0,
+							    error_code);
+}
 
 /*!
 * @brief Public API to set the logical endpoint configuration for a
