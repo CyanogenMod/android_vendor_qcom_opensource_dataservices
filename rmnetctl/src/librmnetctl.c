@@ -72,7 +72,8 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define EGRESS_FLAGS_MASK    (RMNET_EGRESS_FORMAT__RESERVED__ | \
 			      RMNET_EGRESS_FORMAT_MAP | \
 			      RMNET_EGRESS_FORMAT_AGGREGATION | \
-			      RMNET_EGRESS_FORMAT_MUXING)
+			      RMNET_EGRESS_FORMAT_MUXING | \
+			      RMNET_EGRESS_FORMAT_MAP_CKSUMV3)
 
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 /*===========================================================================
