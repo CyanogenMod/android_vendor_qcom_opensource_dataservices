@@ -43,7 +43,8 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 int main(void)
 {
-	int skfd, addrlen, rc;
+	int skfd, rc;
+	socklen_t addrlen;
 	struct sockaddr_nl my_addr, src_addr;
 	struct nlmsghdr *nlh = NULL;
 	struct sknlsockevmsg *msg;
