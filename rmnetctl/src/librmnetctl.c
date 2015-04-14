@@ -438,8 +438,14 @@ int rmnet_get_network_device_associated(rmnetctl_hndl_t *hndl,
 		!= RMNETCTL_SUCCESS)
 		break;
 
-	if (_rmnetctl_check_data(response.crd, error_code) != RMNETCTL_SUCCESS)
+	if (_rmnetctl_check_data(response.crd, error_code)
+		!= RMNETCTL_SUCCESS) {
+		if (_rmnetctl_check_code(response.crd, error_code)
+			== RMNETCTL_SUCCESS)
+			return_code = _rmnetctl_set_codes(response.return_code,
+							  error_code);
 		break;
+	}
 
 	*register_status = response.return_code;
 	return_code = RMNETCTL_SUCCESS;
@@ -517,8 +523,14 @@ int rmnet_get_link_egress_data_format(rmnetctl_hndl_t *hndl,
 		!= RMNETCTL_SUCCESS)
 		break;
 
-	if (_rmnetctl_check_data(response.crd, error_code) != RMNETCTL_SUCCESS)
+	if (_rmnetctl_check_data(response.crd, error_code)
+		!= RMNETCTL_SUCCESS) {
+		if (_rmnetctl_check_code(response.crd, error_code)
+			== RMNETCTL_SUCCESS)
+			return_code = _rmnetctl_set_codes(response.return_code,
+							  error_code);
 		break;
+	}
 
 	*egress_flags = response.data_format.flags;
 	*agg_size = response.data_format.agg_size;
@@ -595,8 +607,14 @@ int rmnet_get_link_ingress_data_format_tailspace(rmnetctl_hndl_t *hndl,
 		!= RMNETCTL_SUCCESS)
 		break;
 
-	if (_rmnetctl_check_data(response.crd, error_code) != RMNETCTL_SUCCESS)
+	if (_rmnetctl_check_data(response.crd, error_code)
+		!= RMNETCTL_SUCCESS) {
+		if (_rmnetctl_check_code(response.crd, error_code)
+			== RMNETCTL_SUCCESS)
+			return_code = _rmnetctl_set_codes(response.return_code,
+							  error_code);
 		break;
+	}
 
 	if (ingress_flags)
 		*ingress_flags = response.data_format.flags;
@@ -727,8 +745,15 @@ int rmnet_get_logical_ep_config(rmnetctl_hndl_t *hndl,
 	if ((*error_code = rmnetctl_transact(hndl, &request, &response))
 		!= RMNETCTL_SUCCESS)
 		break;
-	if (_rmnetctl_check_data(response.crd, error_code) != RMNETCTL_SUCCESS)
+
+	if (_rmnetctl_check_data(response.crd, error_code)
+		!= RMNETCTL_SUCCESS) {
+		if (_rmnetctl_check_code(response.crd, error_code)
+			== RMNETCTL_SUCCESS)
+			return_code = _rmnetctl_set_codes(response.return_code,
+							  error_code);
 		break;
+	}
 
 	str_len = strlcpy(*next_dev,
 			  (char *)(response.local_ep_config.next_dev),
@@ -819,8 +844,15 @@ int rmnet_get_vnd_name(rmnetctl_hndl_t *hndl,
 	if ((*error_code = rmnetctl_transact(hndl, &request, &response))
 		!= RMNETCTL_SUCCESS)
 		break;
-	if (_rmnetctl_check_data(response.crd, error_code) != RMNETCTL_SUCCESS)
+
+	if (_rmnetctl_check_data(response.crd, error_code)
+		!= RMNETCTL_SUCCESS) {
+		if (_rmnetctl_check_code(response.crd, error_code)
+			== RMNETCTL_SUCCESS)
+			return_code = _rmnetctl_set_codes(response.return_code,
+							  error_code);
 		break;
+	}
 
 	str_len = (uint32_t)strlcpy(buf,
 			  (char *)(response.vnd.vnd_name),
