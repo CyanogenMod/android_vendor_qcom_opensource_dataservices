@@ -20,6 +20,7 @@ LOCAL_SRC_FILES += datatop_value_only_poll.c
 
 LOCAL_CFLAGS := -Wall -Wextra -Werror -pedantic
 LOCAL_CFLAGS += -DVERSION="\"1.0.4"\"
+LOCAL_CFLAGS += -DHAVE_STRL_FUNCTIONS
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)
 

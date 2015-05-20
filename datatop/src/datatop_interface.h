@@ -156,4 +156,11 @@ int dtop_write_pollingdata_csv(struct dtop_linked_list *dpg_list, FILE *fw);
 void dtop_reset_dp_initial_values(struct dtop_linked_list *dpg_list);
 void deconstruct_dpgs(struct dtop_linked_list *dpg_list);
 int dtop_print_system_snapshot(char *file);
+
+
+#ifndef HAVE_STRL_FUNCTIONS
+#define strlcpy(X,Y,Z) strcpy(X,Y)
+#define strlcat(X,Y,Z) strcat(X,Y)
+#endif /* HAVE_STRL_FUNCTIONS */
+
 #endif /*  DATATOP_INTERFACE_H */
