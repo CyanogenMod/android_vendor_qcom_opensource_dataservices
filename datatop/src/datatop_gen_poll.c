@@ -69,6 +69,10 @@ static int get_number_of_values(struct dtop_data_point_gatherer *dpg)
 	read = dt_read_file(dpg->file, &data, DTOP_GEN_SIZE);
 	line_len = dt_read_line(line, DTOP_GEN_LINE, data, DTOP_GEN_SIZE, 0);
 
+	if (read == 0) {
+		return 0;
+	}
+
 	if (line_len < 1) {
 		dt_free(&data);
 		return 0;

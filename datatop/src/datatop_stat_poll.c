@@ -219,7 +219,7 @@ static void construct_stat_file_dpg(struct dtop_data_point
  */
 int dtop_stat_search(struct dtop_stat_vars *storage)
 {
-	int i, k, n, sum;
+	int i, n, sum;
 	char *data;
 	int *line_len = malloc(sizeof(int) * storage->line_count);
 	int read;
@@ -297,7 +297,6 @@ int dtop_stat_search(struct dtop_stat_vars *storage)
 			count++;
 		}
 	}
-	k = 0;
 
 	/* Calls dpg constructor, dpg will point to the dp struct */
 	construct_stat_file_dpg(data_points, storage, dp_count);
