@@ -45,6 +45,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>
+#include <time.h>
 #include "datatop_interface.h"
 #include "datatop_linked_list.h"
 #include "datatop_opt.h"
@@ -94,6 +95,7 @@ int dtop_poll_periodically(struct dtop_linked_list *dpg_list, FILE *fw)
 	int inp, quit;
 	struct dtop_linked_list *curr_ptr = dpg_list;
 	struct dtop_data_point_gatherer *dpset;
+	struct timeval ftime, itime, polltime;
 
 	gettimeofday(&tv, NULL);
 	curtime = tv.tv_sec;
@@ -113,6 +115,7 @@ int dtop_poll_periodically(struct dtop_linked_list *dpg_list, FILE *fw)
 		return FILE_ERROR;
 
 	dtop_print_interactive_opts();
+	gettimeofday(&itime, NULL);
 	/* periodically poll the datapoints and print in csv format */
 	while (curtime < endtime
 		|| usr_cl_opts.poll_time == POLL_NOT_SPECIFIED) {
@@ -120,7 +123,12 @@ int dtop_poll_periodically(struct dtop_linked_list *dpg_list, FILE *fw)
 		FD_SET(0, &rfds);
 		timeout.tv_sec = usr_cl_opts.poll_per;
 		timeout.tv_usec = 0;
+		//ftime is right before timeout calculations for most acurate calculations
+		gettimeofday(&ftime, NULL);
+		timersub(&ftime, &itime, &polltime);
+		timersub(&timeout,&polltime, &timeout);
 		inp = select(1, &rfds, NULL, NULL, &timeout);
+		gettimeofday(&itime, NULL);
 		if (inp) {
 			char s[4];
 			scanf("%s", s);

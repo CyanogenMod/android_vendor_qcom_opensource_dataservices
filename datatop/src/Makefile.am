@@ -2,7 +2,7 @@
 
 CFLAGS := -std=c99                        # Target c99 for portability
 CFLAGS += -Wall -Wextra -Werror -pedantic # Strict code quality enforcement
-CFLAGS += -g                              # Enable debugging
+CFLAGS += -g -D _BSD_SOURCE               # Enable debugging and BSD time functions
 
 bin_PROGRAMS = datatop
 datatop_SOURCES := datatop.c
