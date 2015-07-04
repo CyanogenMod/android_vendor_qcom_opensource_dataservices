@@ -38,6 +38,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdio.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <string.h>
 
 #define SOCKEVCLI_ERROR -1
 
