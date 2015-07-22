@@ -36,8 +36,10 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 #include <stdio.h>
+#include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
+#include <inttypes.h>
 #include "datatop_interface.h"
 #include "datatop_fileops.h"
 #include "datatop_str.h"
@@ -142,7 +144,7 @@ int dtop_meminfo_poll(struct dtop_data_point_gatherer *dpg)
 	for (j = 0; j < dpg->data_points_len; j++) {
 		i = dt_find_dict_idx(dpg->data_points[j].name, &dict);
 		if (i >= 0 && i < dict.max) {
-			sscanf(dict.val[i], "%lu",
+			sscanf(dict.val[i], "%" PRIu64,
 			       &(dpg->data_points[i].data.d_ulong));
 			dpg->data_points[i].data.d_ulong *= 1024;
 			if (dpg->data_points[i].

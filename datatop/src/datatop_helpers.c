@@ -38,6 +38,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <time.h>
 #include <sys/time.h>
 #include <string.h>
@@ -84,11 +85,11 @@ static int dtop_format_dp_values(struct dtop_data_point *dp, FILE *fw)
 {
 	switch (dp->type) {
 	case DTOP_ULONG:
-		if (fprintf(fw, "%lu", dp->data.d_ulong) < 0)
+		if (fprintf(fw, "%"PRIu64, dp->data.d_ulong) < 0)
 			return FILE_ERROR;
 	break;
 	case DTOP_LONG:
-		if (fprintf(fw, "%ld", dp->data.d_long) < 0)
+		if (fprintf(fw, "%"PRId64, dp->data.d_long) < 0)
 			return FILE_ERROR;
 	break;
 	case DTOP_UINT:
@@ -191,11 +192,7 @@ static void dtop_handle_dp_type_for_snapshot(
 			- (int64_t)dp.initial_data.d_ulong;
 		if (int64 != 0) {
 			dtop_format_text_for_snapshot(dpset, dp);
-			#if (__SIZEOF_LONG__ == 4)
-				printf("%lld\n", int64);
-			#elif (__SIZEOF_LONG__ == 8)
-				printf("%ld\n", int64);
-			#endif
+			printf("%"PRId64"\n", int64);
 		}
 	break;
 
@@ -205,11 +202,7 @@ static void dtop_handle_dp_type_for_snapshot(
 			- (int64_t)dp.initial_data.d_long;
 		if (int64 != 0) {
 			dtop_format_text_for_snapshot(dpset, dp);
-			#if (__SIZEOF_LONG__ == 4)
-				printf("%lld\n", int64);
-			#elif (__SIZEOF_LONG__ == 8)
-				printf("%ld\n", int64);
-			#endif
+			printf("%"PRId64"\n", int64);
 		}
 	break;
 
@@ -218,11 +211,7 @@ static void dtop_handle_dp_type_for_snapshot(
 			- (int64_t)dp.initial_data.d_uint;
 		if (int64 != 0) {
 			dtop_format_text_for_snapshot(dpset, dp);
-			#if (__SIZEOF_LONG__ == 4)
-				printf("%lld\n", int64);
-			#elif (__SIZEOF_LONG__ == 8)
-				printf("%ld\n", int64);
-			#endif
+			printf("%"PRId64"\n", int64);
 		}
 	break;
 
@@ -231,11 +220,7 @@ static void dtop_handle_dp_type_for_snapshot(
 			- (int64_t)dp.initial_data.d_int;
 		if (int64 != 0) {
 			dtop_format_text_for_snapshot(dpset, dp);
-			#if (__SIZEOF_LONG__ == 4)
-				printf("%lld\n", int64);
-			#elif (__SIZEOF_LONG__ == 8)
-				printf("%ld\n", int64);
-			#endif
+			printf("%"PRId64"\n", int64);
 		}
 	break;
 	}
@@ -332,14 +317,14 @@ void dtop_store_dp(struct dtop_data_point *dp, const char *str)
 {
 	switch (dp->type) {
 	case DTOP_ULONG:
-		sscanf(str, "%lu", &(dp->data.d_ulong));
+		sscanf(str, "%"PRIu64, &(dp->data.d_ulong));
 		if (dp->initial_data_populated == NOT_POPULATED) {
 			dp->initial_data.d_ulong = dp->data.d_ulong;
 			dp->initial_data_populated = POPULATED;
 		}
 	break;
 	case DTOP_LONG:
-		sscanf(str, "%ld", &(dp->data.d_long));
+		sscanf(str, "%"PRId64, &(dp->data.d_long));
 		if (dp->initial_data_populated == NOT_POPULATED) {
 			dp->initial_data.d_long = dp->data.d_long;
 			dp->initial_data_populated = POPULATED;
