@@ -153,7 +153,7 @@ void dtop_close_file(FILE *fw)
  */
 int dtop_get_file_line_amount(char *name)
 {
-	signed char rc = -1;
+	signed char rc = 0;
 	int line_count = 0;
 	FILE *file = fopen(name, "r");
 	while (rc != EOF) {
